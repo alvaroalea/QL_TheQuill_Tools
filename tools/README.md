@@ -23,3 +23,18 @@ You can download original tool with source code from here: https://www.seasip.in
 call it without argument for a list of parameters.
 
 NOT ALL conts and acts has been tested, only half has been tested.
+
+# txt2QLdb
+
+Generate a game database create for use with The Quill for Sinclair QL from a .SCE file.
+
+This tool is distributed under GPL 2. It's derived fron txt2qdb tool from John Elliot, as part of the UnQuill tool.
+You can download original tool with source code from here: https://www.seasip.info/Unix/UnQuill/
+
+## Use
+
+NOT WORK YET
+
+call it without argument for a list of parameters.
+
+NOT ALL conts and acts has been tested, only half has been tested.
