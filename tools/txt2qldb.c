@@ -1,6 +1,6 @@
 /* txt2qdb: Assemble PAW-style source to a database compatible with
-           the CP/M version of the "Quill" adventure game system.
-    Copyright (C) 2023  John Elliott
+           the Sinclair QL version of the "Quill" adventure game system.
+    Copyright (C) 2023  John Elliott and (C) 2024 Alvaro Alea
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -26,10 +26,27 @@
 #define SEEK_SET 0
 #endif
 
-typedef unsigned char zbyte;
-typedef unsigned short zword;
+typedef uint8_t zbyte;
+typedef uint32_t zword;
 
-#define BASE 0xF00
+/* OFFSET OF DATA AND TABLES */
+#define OFF_N_OBJ 7
+#define OFF_N_LOC 8
+#define OFF_N_MSG 9
+#define OFF_N_SMS 0xA
+#define OFF_T_RES 0x0C
+#define OFF_T_PRC 0x10
+#define OFF_T_OBJ 0x14
+#define OFF_T_LOC 0x18
+#define OFF_T_MSG 0x1C
+#define OFF_T_SMS 0x20
+#define OFF_T_CON 0x24
+#define OFF_T_VOC 0x28
+#define OFF_T_OBL 0x2C
+#define OFF_T_OBW 0x30
+#define DIR_SIZE 4
+
+#define BASE 0x000
 #define MAXLINE 257	/* Maximum line length */
 
 zbyte qdb[0xF100];
@@ -121,13 +138,15 @@ static void append_byte(zbyte b)
 
 static void pokew(zword addr, zword value)
 {
-	qdb[addr  ] = value & 0xFF;
-	qdb[addr+1] = value >> 8;
+	qdb[addr  ] = ( value & 0xFF000000 )>> 24 ;
+	qdb[addr+1] = ( value & 0x00FF0000 )>> 16 ;
+	qdb[addr+2] = ( value & 0x0000FF00 )>>  8 ;
+	qdb[addr+3] = ( value & 0x000000FF )      ;
 }
 
 zword peekw(zword offset)
 {
-	return qdb[offset] + 256 * qdb[offset + 1];
+	return 0x1000000 * qdb[offset] + 0x10000 * qdb[offset + 1] + 0x100 * qdb[offset + 2] + qdb[offset + 3];
 }
 
 
@@ -1172,11 +1191,12 @@ int main(int argc, char **argv)
 /* Initialise the header to zeroes */
 	memset(qdb, 0, sizeof(qdb));
 	qdb[1] = 1;	/* version */
-	if (debugmode) qdb[2] = 1;
+	// if (debugmode) qdb[2] = 1; //FIXME: not sure if work on QL
 
 	parse_file();
 
 	pokew(0x1B, write_ptr + BASE);
+	//FIXME: Calculate a good memory allocation size
 	fpout = fopen(outfile, "wb");
 	if (!fpout)
 	{
