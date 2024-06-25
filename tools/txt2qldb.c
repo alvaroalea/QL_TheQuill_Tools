@@ -19,6 +19,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 #include <ctype.h>
 
@@ -49,7 +50,7 @@ typedef uint32_t zword;
 #define BASE 0x000
 #define MAXLINE 257	/* Maximum line length */
 
-zbyte qdb[0xF100];
+zbyte qdb[0xFFFF];
 zword write_ptr = 0x1D;
 
 char *infile = NULL;
@@ -396,13 +397,13 @@ char *get_word(char *data, char *result, int *word_id)
 	/* If we want to know the word ID, look it up */
 	if (word_id)
 	{
-		if (!peekw(0x15))
+		if (!peekw(OFF_T_VOC))
 		{
 			fprintf(stderr, "%s(%d): Trying to access the vocabulary"
 				" but none is loaded\n", infile, curline);
 			exit(1);
 		}
-		vocbase = peekw(0x15) - BASE;
+		vocbase = peekw(OFF_T_VOC) - BASE;
 
 		while (qdb[vocbase + 4] != 0)
 		{
@@ -1240,14 +1241,14 @@ static void parse_file(void)
 /* Locate the CTL section and parse it */
 		if (!ctl_done) parse_ctl();
 		if (voc_pos >= 0) parse_voc();
-		if (stx_pos >= 0) parse_tx(stx_pos, stx_line, OFF_T_SMS, OFF_N_SMS, 1);
-		if (mtx_pos >= 0) parse_tx(mtx_pos, mtx_line, OFF_T_MSG, OFF_N_MSG, 0);
-		if (ltx_pos >= 0) parse_tx(ltx_pos, mtx_line, OFF_T_LOC, OFF_N_LOC, 0);
-		if (otx_pos >= 0) parse_tx(otx_pos, mtx_line, OFF_T_OBJ, OFF_N_OBJ, 0);
-		if (con_pos >= 0) parse_con();
-		if (obj_pos >= 0) parse_obj();
-		if (pro0_pos >= 0) parse_pro(pro0_pos, pro0_line, OFF_T_RES, 1);
-		if (pro2_pos >= 0) parse_pro(pro2_pos, pro2_line, OFF_T_PRC, 1);
+//		if (stx_pos >= 0) parse_tx(stx_pos, stx_line, OFF_T_SMS, OFF_N_SMS, 1);
+//		if (mtx_pos >= 0) parse_tx(mtx_pos, mtx_line, OFF_T_MSG, OFF_N_MSG, 0);
+//		if (ltx_pos >= 0) parse_tx(ltx_pos, mtx_line, OFF_T_LOC, OFF_N_LOC, 0);
+//		if (otx_pos >= 0) parse_tx(otx_pos, mtx_line, OFF_T_OBJ, OFF_N_OBJ, 0);
+//		if (con_pos >= 0) parse_con();
+//		if (obj_pos >= 0) parse_obj();
+//		if (pro0_pos >= 0) parse_pro(pro0_pos, pro0_line, OFF_T_RES, 1);
+//		if (pro2_pos >= 0) parse_pro(pro2_pos, pro2_line, OFF_T_PRC, 1);
 		
 		fclose(fpin);
 
