@@ -158,7 +158,7 @@ zword peekw(zword offset)
  */
 
 static int curline = 0;
-static char linebuf[MAXLINE];
+static zbyte linebuf[MAXLINE];
 
 static void makeupper(char *p)
 {
@@ -432,7 +432,7 @@ static void parse_voc(void)
 	int n, word_id;
 	zword vocbase = write_ptr;	
 	
-	pokew(0x15, vocbase + BASE);
+	pokew(OFF_T_VOC, vocbase + BASE);
 	fseek(fpin, voc_pos, SEEK_SET); curline = voc_line;
 	while (nextline())
 	{
@@ -477,6 +477,8 @@ static void parse_voc(void)
 		append_byte(~wrd[3]);
 		append_byte(n);		
 	}
+	//FIXME check if QL add a void word at end.
+	append_byte('*');append_byte(' ');append_byte(' ');append_byte(' ');append_byte(0xFF);
 	for (n = 0; n < 5; n++) append_byte(0);	/* End marker */
 }
 
@@ -541,6 +543,7 @@ static void parse_tx(long tx_pos, int tx_line,
 					{
 /* \+ and \- are used by txt2adv to indicate "inverse on" and "inverse off". 
  * Not supported by QDB, so we skip them */
+//FIXME: QL suppport it.
 						if (data[1] == '+' || data[1] == '-')
 						{
 							++data;
@@ -576,13 +579,14 @@ static void parse_tx(long tx_pos, int tx_line,
 	{
 		append_byte(~0x0D);			
 	}
-/* If the script supplies fewer than 42 system messages, we have
+/* If the script supplies fewer than 32 system messages, we have
  * the option to supply the deficit from defaults */
-	if (sys && txmax < 42)
+//FIXME: in QL there are 32 messages.
+	if (sys && txmax < 32)
 	{
 		if (fixup)
 		{
-			while (txmax < 42)
+			while (txmax < 32)
 			{
 				table[txmax] = write_ptr;
 				data = (char *)def_sysmsg[txmax];
@@ -597,7 +601,7 @@ static void parse_tx(long tx_pos, int tx_line,
 		}
 		else
 		{
-			fprintf(stderr, "%s: Warning: Fewer than 42 system messages.\n"
+			fprintf(stderr, "%s: Warning: Fewer than 32 system messages.\n"
 				"Recompile with -f to add default messages for the missing entries.\n", infile);
 		}
 	}
@@ -859,7 +863,7 @@ static const char *condacts[] =
 	"COPYFF|59|ff",
 	"ISDESC|60|",
 	"EXTERN|61|i",
-/* CondActs which we recognise but aren't supported by this engine */
+/* FIXME: QLCondActs which we recognise but aren't supported by this engine */
 	"BEEP|X|ii",
 	"INK|X|i",
 	"PAPER|X|i",
@@ -869,6 +873,92 @@ static const char *condacts[] =
 	"TEXT|X|i",
 	NULL
 };
+
+static const char *conds[] =
+{
+	"AT|0|l",
+	"NOTAT|1|l",
+	"ATGT|2|l",
+	"ATLT|3|l",
+	"PRESENT|4|o",
+	"ABSENT|5|o",
+	"WORN|6|o",
+	"NOTWORN|7|o",
+	"CARRIED|8|o",
+	"NOTCARR|9|o",
+	"CHANCE|10|i",
+	"ZERO|11|f",
+	"NOTZERO|12|f",
+	"EQ|13|fi",
+	"GT|14|fi",
+	"LT|15|fi",
+	"WORD3|16|w",
+	"WORD4|17|w",
+	"ISAT|55|ol",
+	"ISDESC|60|",
+	NULL
+};
+
+static const char *acts[] =
+{
+	"INVEN|0|",
+	"DESC|1|",
+	"QUIT|2|",
+	"END|3|",
+	"DONE|4|",
+	"OK|5|",
+	"ANYKEY|6|",
+	"SAVE|7|",
+	"LOAD|8|",
+	"TURNS|9|",
+		"SCORE|10|",
+	"CLS|11|",
+		"DROPALL|12|",
+	"AUTOG|13|",
+	"AUTOD|14|",
+		"AUTOW|15|",
+		"AUTOR|16|",
+		"PAUSE|17|i",
+		"BELL|18|",
+	
+	"GOTO|21|l",
+	"MESSAGE|22|m",
+		"REMOVE|23|o",
+	"GET|24|o",
+	"DROP|25|o",
+		"WEAR|26|o",
+	"DESTROY|27|o",
+	"CREATE|28|o",
+	"SWAP|29|oo",
+		"PLACE|46|ol",
+		"SET|47|f",
+		"CLEAR|48|f",
+		"PLUS|49|fi",
+		"MINUS|50|fi",
+		"LET|51|fi",
+		"NEWLINE|52|",
+	"RANSAVE|37|",
+		"PRINT|53|f",
+		"SYSMESS|54|s",
+		"ISAT|55|ol",
+		"COPYOF|56|of",
+		"COPYOO|57|oo",
+		"COPYFO|58|fo",
+		"COPYFF|59|ff",
+		"ISDESC|60|",
+		"EXTERN|61|i",
+	/* FIXME: QLCondActs which we recognise but aren't supported by this engine */
+		"BEEP|X|ii",
+		"INK|X|i",
+		"PAPER|X|i",
+		"BORDER|X|i",
+		"SOUND|X|ii",
+		"SCREEN|X|i",
+		"TEXT|X|i",
+	NULL
+};
+
+
 
 static void parse_condact(char *condact)
 {
@@ -1150,14 +1240,14 @@ static void parse_file(void)
 /* Locate the CTL section and parse it */
 		if (!ctl_done) parse_ctl();
 		if (voc_pos >= 0) parse_voc();
-		if (stx_pos >= 0) parse_tx(stx_pos, stx_line, 0x11, 0x06, 1);
-		if (mtx_pos >= 0) parse_tx(mtx_pos, mtx_line, 0x0F, 0x05, 0);
-		if (ltx_pos >= 0) parse_tx(ltx_pos, mtx_line, 0x0D, 0x04, 0);
-		if (otx_pos >= 0) parse_tx(otx_pos, mtx_line, 0x0B, 0x03, 0);
+		if (stx_pos >= 0) parse_tx(stx_pos, stx_line, OFF_T_SMS, OFF_N_SMS, 1);
+		if (mtx_pos >= 0) parse_tx(mtx_pos, mtx_line, OFF_T_MSG, OFF_N_MSG, 0);
+		if (ltx_pos >= 0) parse_tx(ltx_pos, mtx_line, OFF_T_LOC, OFF_N_LOC, 0);
+		if (otx_pos >= 0) parse_tx(otx_pos, mtx_line, OFF_T_OBJ, OFF_N_OBJ, 0);
 		if (con_pos >= 0) parse_con();
 		if (obj_pos >= 0) parse_obj();
-		if (pro0_pos >= 0) parse_pro(pro0_pos, pro0_line, 7, 1);
-		if (pro2_pos >= 0) parse_pro(pro2_pos, pro2_line, 9, 0);
+		if (pro0_pos >= 0) parse_pro(pro0_pos, pro0_line, OFF_T_RES, 1);
+		if (pro2_pos >= 0) parse_pro(pro2_pos, pro2_line, OFF_T_PRC, 1);
 		
 		fclose(fpin);
 
@@ -1193,10 +1283,16 @@ int main(int argc, char **argv)
 	qdb[1] = 1;	/* version */
 	// if (debugmode) qdb[2] = 1; //FIXME: not sure if work on QL
 
-	parse_file();
 
+	parse_file();
+	qdb[2] = 7;	/* Ink Color */
+	qdb[3] = 0;	/* Paper Color */
+	qdb[4] = 1;	/* Border Witdh */
+	qdb[5] = 7;	/* Border Color */
+	qdb[6] = 4;	/* Conveyable Objects */
 	pokew(0x1B, write_ptr + BASE);
 	//FIXME: Calculate a good memory allocation size
+	pokew(0x38, 32768);
 	fpout = fopen(outfile, "wb");
 	if (!fpout)
 	{
@@ -1211,4 +1307,3 @@ int main(int argc, char **argv)
 	}
 	return 0;
 }
-
