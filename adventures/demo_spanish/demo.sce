@@ -107,7 +107,7 @@ INFO	216
 AYUD	217
 PIST	217
 HELP	217
-*   	255
+;*   	255
 ;-    -    -    -    -    -    -    -    -    -    -    -    -    -    
 /STX		;System messages
 /0

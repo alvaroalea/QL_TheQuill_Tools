@@ -51,7 +51,7 @@ typedef uint32_t zword;
 #define MAXLINE 257	/* Maximum line length */
 
 zbyte qdb[0xFFFF];
-zword write_ptr = 0x1D;
+zword write_ptr = 0x3c;
 
 char *infile = NULL;
 char *outfile = NULL;
@@ -428,8 +428,8 @@ char *get_word(char *data, char *result, int *word_id)
 
 static void parse_voc(void)
 {
-	char *data, *p;
-	char wrd[5];
+	zbyte *data, *p;
+	zbyte wrd[5];
 	int n, word_id;
 	zword vocbase = write_ptr;	
 	
@@ -471,15 +471,16 @@ static void parse_voc(void)
 			fprintf(stderr, "%s(%d): VOC: Word '%s' must be numbered 1-254\n", 
 				infile, curline, wrd);
 			exit(1);
-		}		
-		append_byte(~wrd[0]);		
-		append_byte(~wrd[1]);		
-		append_byte(~wrd[2]);		
+		}
+		//fprintf(stderr, "found word %i: %c%c%c%c\n",n,wrd[0],wrd[1],wrd[2],wrd[3]);
+		append_byte(~wrd[0]);
+		append_byte(~wrd[1]);
+		append_byte(~wrd[2]);
 		append_byte(~wrd[3]);
-		append_byte(n);		
+		append_byte(n);
 	}
 	//FIXME check if QL add a void word at end.
-	append_byte('*');append_byte(' ');append_byte(' ');append_byte(' ');append_byte(0xFF);
+	append_byte(~'*');append_byte(~' ');append_byte(~' ');append_byte(~' ');append_byte(0xFF);
 	for (n = 0; n < 5; n++) append_byte(0);	/* End marker */
 }
 
@@ -1241,15 +1242,15 @@ static void parse_file(void)
 /* Locate the CTL section and parse it */
 		if (!ctl_done) parse_ctl();
 		if (voc_pos >= 0) parse_voc();
-//		if (stx_pos >= 0) parse_tx(stx_pos, stx_line, OFF_T_SMS, OFF_N_SMS, 1);
-//		if (mtx_pos >= 0) parse_tx(mtx_pos, mtx_line, OFF_T_MSG, OFF_N_MSG, 0);
-//		if (ltx_pos >= 0) parse_tx(ltx_pos, mtx_line, OFF_T_LOC, OFF_N_LOC, 0);
-//		if (otx_pos >= 0) parse_tx(otx_pos, mtx_line, OFF_T_OBJ, OFF_N_OBJ, 0);
-//		if (con_pos >= 0) parse_con();
-//		if (obj_pos >= 0) parse_obj();
-//		if (pro0_pos >= 0) parse_pro(pro0_pos, pro0_line, OFF_T_RES, 1);
+		if (obj_pos >= 0) parse_obj();
+		if (con_pos >= 0) parse_con();
+		if (mtx_pos >= 0) parse_tx(mtx_pos, mtx_line, OFF_T_MSG, OFF_N_MSG, 0);
+		if (stx_pos >= 0) parse_tx(stx_pos, stx_line, OFF_T_SMS, OFF_N_SMS, 1);
+		if (ltx_pos >= 0) parse_tx(ltx_pos, mtx_line, OFF_T_LOC, OFF_N_LOC, 0);
+		if (otx_pos >= 0) parse_tx(otx_pos, mtx_line, OFF_T_OBJ, OFF_N_OBJ, 0);
+		if (pro0_pos >= 0) parse_pro(pro0_pos, pro0_line, OFF_T_RES, 1);
 //		if (pro2_pos >= 0) parse_pro(pro2_pos, pro2_line, OFF_T_PRC, 1);
-		
+
 		fclose(fpin);
 
 		/* If a LNK block was found, repeat on that file */
