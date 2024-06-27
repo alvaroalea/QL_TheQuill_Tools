@@ -8,20 +8,32 @@ A03 and A07, show copyright dated 23 October 1986 by Huw H. Powell
 The version number do not match other platforms and some capabilities of the QL version can only be found C versions, the CP/M Version or even in PAW.
 
 ## Capabilities
-Free space available on start (on bare Sinclair QL) > 32768 bytes
+Free space available on start (on bare Sinclair QL) > 53760 bytes, memory increase if you have memory expansion.
 
-Text resolution: 40 columns by 25 rows, mode 4 or mode 8 colors (same columns/rows)
+Text resolution: 37 columns by 22 rows, mode 4 or mode 8 colors (same columns/rows)
 
 Use, like BBC an Oric, * instead of _
+
+The executable file shall be run with
+'''
+ex file
+'''
+when leave the game, the screen is not clean, so last typed remain.
+
+using lresp to load the executable game work, but game is unable to leave, going back to start the adventure after put garbage in screen.
 
 ### Sound/Color Actions:
 * SOUND
 * BORDER / PAPER / INK 
 * CLS
 
+Ctr, Shift and number or symbol can generate internacional leters as per next table:
+
 Alt + 0-7 change color of ink.
 Alt + 8 inverse video, 
 Alt + 9 Go back to normal colors.
+Shift + Enter Change of line
+
 
 To change the color of background, change ink to paper desired, inverse and change ink again
 
