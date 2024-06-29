@@ -868,6 +868,8 @@ static const char *condacts[] =
 		"PRINT|39|a|f",
 		"SYSMESS|40|a|s",
 		"SOUND|41|a|ii",
+/* CondActs which we recognise but aren't supported by QL engine */
+		"BEEP|X|a|ii",
 	NULL
 };
 
