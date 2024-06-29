@@ -46,6 +46,7 @@ typedef uint32_t zword;
 #define OFF_T_OBL 0x2C
 #define OFF_T_OBW 0x30
 #define DIR_SIZE 4
+#define MAX_FLAGS 64
 
 #define BASE 0x000
 #define MAXLINE 257	/* Maximum line length */
@@ -507,7 +508,7 @@ static void parse_tx(long tx_pos, int tx_line,
 
 			if (state == 1)		/* Message under construction */
 			{
-				append_byte(~0x0D);			
+				append_byte(0xFF);			
 				txbase = write_ptr;
 				state = 0;	
 			}
@@ -545,7 +546,8 @@ static void parse_tx(long tx_pos, int tx_line,
 					{
 /* \+ and \- are used by txt2adv to indicate "inverse on" and "inverse off". 
  * Not supported by QDB, so we skip them */
-//FIXME: QL suppport it.
+//FIXME: QL suppport it. 
+//FIXME: extra chars here for SINclair QL
 						if (data[1] == '+' || data[1] == '-')
 						{
 							++data;
@@ -579,11 +581,11 @@ static void parse_tx(long tx_pos, int tx_line,
 	}
 	if (state == 1)		/* Terminate the message under construction */
 	{
-		append_byte(~0x0D);			
+		append_byte(0xFF);			
 	}
 /* If the script supplies fewer than 32 system messages, we have
  * the option to supply the deficit from defaults */
-//FIXME: in QL there are 32 messages.
+//FIXME: check if in QL there are 32 messages or more for save/load msg
 	if (sys && txmax < 32)
 	{
 		if (fixup)
@@ -613,8 +615,10 @@ static void parse_tx(long tx_pos, int tx_line,
 	for (n = 0; n < txmax; n++)
 	{
 		table[n] += BASE;
-		append_byte(table[n] & 0xFF);	
-		append_byte(table[n] >> 8);	
+		append_byte((table[n] & 0xFF000000 )>>24);	
+		append_byte((table[n] & 0x00FF0000 )>>16);	
+		append_byte((table[n] & 0x0000FF00 )>> 8);	
+		append_byte((table[n] & 0x000000FF )    );	
 	}
 }
 
@@ -696,12 +700,14 @@ static void parse_con(void)
 	{
 		append_byte(0xFF);			
 	}
-	pokew(0x13, write_ptr + BASE);
+	pokew(OFF_T_CON, write_ptr + BASE);
 	for (n = 0; n < conmax; n++)
 	{
 		table[n] += BASE;
-		append_byte(table[n] & 0xFF);	
-		append_byte(table[n] >> 8);	
+		append_byte((table[n] & 0xFF000000 )>>24);	
+		append_byte((table[n] & 0x00FF0000 )>>16);	
+		append_byte((table[n] & 0x0000FF00 )>> 8);	
+		append_byte((table[n] & 0x000000FF )    );	
 	}
 
 }
@@ -785,12 +791,12 @@ static void parse_obj(void)
 	}
 	if (maxobj < qdb[3]) maxobj = qdb[3];
 	
-	pokew(0x17, write_ptr + BASE);
+	pokew(OFF_T_OBL, write_ptr + BASE);
 	for (n = 0; n < maxobj; n++) append_byte(tab1[n]); 
 	append_byte(0xFF);	/* To terminate the table */
-	pokew(0x19, write_ptr + BASE);
+	pokew(OFF_T_OBW, write_ptr + BASE);
 	for (n = 0; n < maxobj; n++) append_byte(tab2[n]);
-	append_byte(0xFF);	/* To terminate the table */
+	append_byte(0x00);	/* To terminate the table */
 }
 
 /* CondAct syntax table. Each row is formed token|encoding|arguments. 
@@ -803,175 +809,79 @@ static void parse_obj(void)
 
 static const char *condacts[] =
 {
-	"AT|0|l",
-	"NOTAT|1|l",
-	"ATGT|2|l",
-	"ATLT|3|l",
-	"PRESENT|4|o",
-	"ABSENT|5|o",
-	"WORN|6|o",
-	"NOTWORN|7|o",
-	"CARRIED|8|o",
-	"NOTCARR|9|o",
-	"CHANCE|10|i",
-	"ZERO|11|f",
-	"NOTZERO|12|f",
-	"EQ|13|fi",
-	"GT|14|fi",
-	"LT|15|fi",
-	"WORD3|16|w",
-	"WORD4|17|w",
-	"INVEN|18|",
-	"DESC|19|",
-	"QUIT|20|",
-	"END|21|",
-	"DONE|22|",
-	"OK|23|",
-	"ANYKEY|24|",
-	"SAVE|25|",
-	"LOAD|26|",
-	"TURNS|27|",
-	"SCORE|28|",
-	"CLS|29|",
-	"DROPALL|30|",
-	"AUTOG|31|",
-	"AUTOD|32|",
-	"AUTOW|33|",
-	"AUTOR|34|",
-	"PAUSE|35|i",
-	"BELL|36|",
-	"GOTO|37|l",
-	"MESSAGE|38|m",
-	"REMOVE|39|o",
-	"GET|40|o",
-	"DROP|41|o",
-	"WEAR|42|o",
-	"DESTROY|43|o",
-	"CREATE|44|o",
-	"SWAP|45|oo",
-	"PLACE|46|ol",
-	"SET|47|f",
-	"CLEAR|48|f",
-	"PLUS|49|fi",
-	"MINUS|50|fi",
-	"LET|51|fi",
-	"NEWLINE|52|",
-	"PRINT|53|f",
-	"SYSMESS|54|s",
-	"ISAT|55|ol",
-	"COPYOF|56|of",
-	"COPYOO|57|oo",
-	"COPYFO|58|fo",
-	"COPYFF|59|ff",
-	"ISDESC|60|",
-	"EXTERN|61|i",
-/* FIXME: QLCondActs which we recognise but aren't supported by this engine */
-	"BEEP|X|ii",
-	"INK|X|i",
-	"PAPER|X|i",
-	"BORDER|X|i",
-	"SOUND|X|ii",
-	"SCREEN|X|i",
-	"TEXT|X|i",
+	"AT|0|c|l",
+	"NOTAT|1|c|l",
+	"ATGT|2|c|l",
+	"ATLT|3|c|l",
+	"PRESENT|4|c|o",
+	"ABSENT|5|c|o",
+	"WORN|6|c|o",
+	"NOTWORN|7|c|o",
+	"CARRIED|8|c|o",
+	"NOTCARR|9|c|o",
+	"CHANCE|10|c|i",
+	"ZERO|11|c|f",
+	"NOTZERO|c|12|f",
+	"EQ|13|c|fi",
+	"GT|14|c|fi",
+	"LT|15|c|fi",
+
+		"INVEN|0|a|",
+	"DESC|1|a|",
+	"QUIT|2|a|",
+	"END|3|a|",
+	"DONE|4|a|",
+	"OK|5|a|",
+	"ANYKEY|6|a|",
+	"SAVE|7|a|",
+	"LOAD|8|a|",
+	"TURNS|9|a|",
+		"SCORE|10|a|",
+	"CLS|11|a|",
+		"DROPALL|12|a|",
+	"AUTOG|13|a|",
+	"AUTOD|14|a|",
+		"AUTOW|15|a|",
+		"AUTOR|16|a|",
+		"PAUSE|17|a|i",
+		"INK|18|a|i",
+		"PAPER|19|a|i",
+		"BORDER|20|a|i",
+	"GOTO|21|a|l",
+	"MESSAGE|22|a|m",
+		"REMOVE|23|a|o",
+	"GET|24|a|o",
+	"DROP|25|a|o",
+		"WEAR|26|a|o",
+	"DESTROY|27|a|o",
+	"CREATE|28|a|o",
+	"SWAP|29|a|oo",
+		"PLACE|30|a|ol",
+		"SET|31|a|f",
+		"CLEAR|32|a|f",
+		"PLUS|33|a|fi",
+		"MINUS|34|a|fi",
+		"LET|35|a|fi",
+		"NEWLINE|36|a|",
+	"RAMSAVE|37|a|",
+	"RAMLOAD|38|a|",
+		"PRINT|39|a|f",
+		"SYSMESS|40|a|s",
+		"SOUND|41|a|ii",
 	NULL
 };
 
-static const char *conds[] =
-{
-	"AT|0|l",
-	"NOTAT|1|l",
-	"ATGT|2|l",
-	"ATLT|3|l",
-	"PRESENT|4|o",
-	"ABSENT|5|o",
-	"WORN|6|o",
-	"NOTWORN|7|o",
-	"CARRIED|8|o",
-	"NOTCARR|9|o",
-	"CHANCE|10|i",
-	"ZERO|11|f",
-	"NOTZERO|12|f",
-	"EQ|13|fi",
-	"GT|14|fi",
-	"LT|15|fi",
-	"WORD3|16|w",
-	"WORD4|17|w",
-	"ISAT|55|ol",
-	"ISDESC|60|",
-	NULL
-};
-
-static const char *acts[] =
-{
-	"INVEN|0|",
-	"DESC|1|",
-	"QUIT|2|",
-	"END|3|",
-	"DONE|4|",
-	"OK|5|",
-	"ANYKEY|6|",
-	"SAVE|7|",
-	"LOAD|8|",
-	"TURNS|9|",
-		"SCORE|10|",
-	"CLS|11|",
-		"DROPALL|12|",
-	"AUTOG|13|",
-	"AUTOD|14|",
-		"AUTOW|15|",
-		"AUTOR|16|",
-		"PAUSE|17|i",
-		"BELL|18|",
-	
-	"GOTO|21|l",
-	"MESSAGE|22|m",
-		"REMOVE|23|o",
-	"GET|24|o",
-	"DROP|25|o",
-		"WEAR|26|o",
-	"DESTROY|27|o",
-	"CREATE|28|o",
-	"SWAP|29|oo",
-		"PLACE|46|ol",
-		"SET|47|f",
-		"CLEAR|48|f",
-		"PLUS|49|fi",
-		"MINUS|50|fi",
-		"LET|51|fi",
-		"NEWLINE|52|",
-	"RANSAVE|37|",
-		"PRINT|53|f",
-		"SYSMESS|54|s",
-		"ISAT|55|ol",
-		"COPYOF|56|of",
-		"COPYOO|57|oo",
-		"COPYFO|58|fo",
-		"COPYFF|59|ff",
-		"ISDESC|60|",
-		"EXTERN|61|i",
-	/* FIXME: QLCondActs which we recognise but aren't supported by this engine */
-		"BEEP|X|ii",
-		"INK|X|i",
-		"PAPER|X|i",
-		"BORDER|X|i",
-		"SOUND|X|ii",
-		"SCREEN|X|i",
-		"TEXT|X|i",
-	NULL
-};
-
-
-
-static void parse_condact(char *condact)
+int parse_condact(char *condact,int isaction)
 {
 	char token[MAXLINE];
 	char *p = token;
 	const char *args;
 	int n, l, arg;
 	int matched;
+//	fprintf(stderr,"evaluamos %s\n",condact);
 
-	while (issep(*condact)) ++condact;
-	if (!isalnum(*condact))
+	while (issep(*condact)) ++condact; 	// remove spaces from start of line.
+	if (!isalnum(*condact)) 			// if not alfanumeric error
 	{
 		fprintf(stderr, "%s(%d): Expecting a CondAct but found '%s'\n", 
 				infile, curline, condact);
@@ -982,21 +892,26 @@ static void parse_condact(char *condact)
 		*p++ = *condact++;	
 	}
 	*p++ = '|';
+
 	while (issep(*condact)) ++condact;
 	makeupper(token);
 	*p = 0;
 	l = strlen(token);
+	// So now token is fist word of line in capitals, and condact point to second word/number
+//	fprintf(stderr,"token  %s\n",token);
+//	fprintf(stderr,"resto  %s\n",condact);
+
 	matched = -1;
 	for (n = 0; condacts[n]; n++)
 	{
 		if (!strncmp(condacts[n], token, l))
 		{
-			if (condacts[n][l] == 'X')
+			if (condacts[n][l] == 'X') //l is next character after | in found line on table condacts
 			{
 				rtrim(token, '|');
 				fprintf(stderr, "%s(%d): Warning: CondAct '%s' is not supported by this Quill variant\n", 
 				infile, curline, token);
-				return;
+				return isaction;
 			}
 
 			matched = atoi(&condacts[n][l]);
@@ -1012,7 +927,29 @@ static void parse_condact(char *condact)
 				infile, curline, token);
 		exit(1);
 	}
+
+//	fprintf(stderr,"args0  %s\n",args);
+
+/*
+	if (args[0] == 'c') 
+	{ 
+		fprintf(stderr, "Is Command\n");
+	}
+*/ 
+	if (args[0] == 'a') // I add a charecter an a | to diferenciate action of conditions
+	{ 
+//		fprintf(stderr, "Is Action\n");
+		if (isaction == 0) 
+		{
+		isaction = 1;
+		append_byte(0xFF);
+		}
+	} 
+	args ++ ; args++ ;
+//	fprintf(stderr,"args1  %s\n",args);
+
 	append_byte(matched);
+
 	while (*args)
 	{
 		if (!isdigit(*condact))
@@ -1033,7 +970,7 @@ static void parse_condact(char *condact)
 		}
 		switch(*args)
 		{
-			case 'f': if (arg > 38) 
+			case 'f': if (arg > MAX_FLAGS) 
 					fprintf(stderr, "%s(%d): Flag number %d out of range\n", 
 						infile, curline, arg);
 				  break;
@@ -1057,6 +994,7 @@ static void parse_condact(char *condact)
 		append_byte(arg);
 		++args;
 	}
+	return isaction;
 }
 
 
@@ -1117,6 +1055,8 @@ static void parse_pro(long pos, int line, int ptr, int response)
 	int state = 0;
 	int entries = 0;
 	int table_base = write_ptr;
+	int isaction= 0;
+	int part = 0;
 
 /* First pass: Count the number of entries and store verb and noun */
 	fseek(fpin, pos, SEEK_SET);
@@ -1131,11 +1071,13 @@ static void parse_pro(long pos, int line, int ptr, int response)
 		{
 			if (n == 1) 
 			{ 
-				if (response)
+				if (response) // alwais in QL.
 				{
 					append_byte(word1);
 					append_byte(word2);
 				}
+				append_byte(0);
+				append_byte(0);
 				append_byte(0);
 				append_byte(0);
 				++entries; 
@@ -1149,7 +1091,7 @@ static void parse_pro(long pos, int line, int ptr, int response)
 				exit(1);
 			}
 		}
-		else
+		else // state != 0
 		{	
 			if (n == 0)	/* End */
 			{
@@ -1187,10 +1129,11 @@ static void parse_pro(long pos, int line, int ptr, int response)
 		{
 			if (n == 1) 
 			{ 
-				if (response)	pokew(table_base + 2 + entries * 4, write_ptr + BASE);
+				if (response)	pokew(table_base + 2 + entries * 6, write_ptr + BASE);
 				else		pokew(table_base + entries * 2, write_ptr + BASE);	
 				++entries; 
-				state = 1; 
+				state = 1;
+				isaction = 0; 
 			}
 			else	/* Should have been rejected in pass 1 */
 			{
@@ -1199,7 +1142,7 @@ static void parse_pro(long pos, int line, int ptr, int response)
 					infile, curline, linebuf);
 				exit(1);
 			}
-			parse_condact(condact);
+			isaction= parse_condact(condact,isaction);
 		}
 		else
 		{	
@@ -1210,7 +1153,7 @@ static void parse_pro(long pos, int line, int ptr, int response)
 			}
 			else 
 			{
-				parse_condact(condact);
+				isaction= parse_condact(condact,isaction);
 			}
 		}
 	}
@@ -1249,7 +1192,7 @@ static void parse_file(void)
 		if (ltx_pos >= 0) parse_tx(ltx_pos, mtx_line, OFF_T_LOC, OFF_N_LOC, 0);
 		if (otx_pos >= 0) parse_tx(otx_pos, mtx_line, OFF_T_OBJ, OFF_N_OBJ, 0);
 		if (pro0_pos >= 0) parse_pro(pro0_pos, pro0_line, OFF_T_RES, 1);
-//		if (pro2_pos >= 0) parse_pro(pro2_pos, pro2_line, OFF_T_PRC, 1);
+		if (pro2_pos >= 0) parse_pro(pro2_pos, pro2_line, OFF_T_PRC, 1);
 
 		fclose(fpin);
 
@@ -1283,7 +1226,6 @@ int main(int argc, char **argv)
 /* Initialise the header to zeroes */
 	memset(qdb, 0, sizeof(qdb));
 	qdb[1] = 1;	/* version */
-	// if (debugmode) qdb[2] = 1; //FIXME: not sure if work on QL
 
 
 	parse_file();
@@ -1292,9 +1234,12 @@ int main(int argc, char **argv)
 	qdb[4] = 1;	/* Border Witdh */
 	qdb[5] = 7;	/* Border Color */
 	qdb[6] = 4;	/* Conveyable Objects */
-	pokew(0x1B, write_ptr + BASE);
+	// if (debugmode) qdb[0xB] = 1; //FIXME: not sure if work on QL
+
+	pokew(0x34, write_ptr + BASE);
 	//FIXME: Calculate a good memory allocation size
 	pokew(0x38, 32768);
+
 	fpout = fopen(outfile, "wb");
 	if (!fpout)
 	{

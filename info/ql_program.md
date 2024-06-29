@@ -55,6 +55,8 @@ Flags
 
 ## Missing functions
 
+As early version of QUILL process and response tables shall put all conditions first and them all actions, is not possible to mix conditions in middle of actions.
+
 There are missing information
 
 * Blinking
@@ -72,3 +74,7 @@ Is compatible with memory upgardes
 Is compatible with disk and other storage mediums
 
 is Incompatible with Minerva Rom (not load database, other pending test)
+
+## Not tested yet
+
+what happend with colors in mode 4.
