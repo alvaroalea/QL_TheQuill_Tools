@@ -332,12 +332,12 @@ void show_act(zword addr)
 			case 17: fprintf(fpout, "PAUSE\t%d\n", qdb[addr + 1]);
 				addr += 2;
 				break;
-			case 18: fprintf(fpout, "INK\t%d", qdb[addr + 1]);
+			case 18: fprintf(fpout, "PAPER\t%d", qdb[addr + 1]);
 				if (verbose) showobj(qdb[addr + 1]);
 				fputc('\n', fpout);
 				addr += 2;
 				break;
-			case 19: fprintf(fpout, "PAPER\t%d", qdb[addr + 1]);
+			case 19: fprintf(fpout, "INK\t%d", qdb[addr + 1]);
 				if (verbose) showobj(qdb[addr + 1]);
 				fputc('\n', fpout);
 				addr += 2;
@@ -423,8 +423,8 @@ void show_act(zword addr)
 			case 35: fprintf(fpout, "LET\t%d %d\n", qdb[addr + 1], qdb[addr + 2]);
 				addr += 3;
 				break;
-			case 36: fprintf(fpout, "NEWLINE\n");
-				addr++;
+			case 36: fprintf(fpout, "SOUND\t%d %d\n", qdb[addr + 1], qdb[addr + 2]);
+				addr += 3;
 				break;
 			case 37: fprintf(fpout, "RAMSAVE\n"); /* NEW CONFIRMED 37 */
 				addr++;
@@ -432,16 +432,10 @@ void show_act(zword addr)
 			case 38: fprintf(fpout, "RAMLOAD\n"); 
 				addr++;
 				break;
-			case 39: fprintf(fpout, "PRINT\t%d\n", qdb[addr + 1]);
-				addr += 2;
-				break;
-			case 40: fprintf(fpout, "SYSMESS\t%d", qdb[addr + 1]);
+			case 39: fprintf(fpout, "SYSMESS\t%d", qdb[addr + 1]);
 				if (verbose) showsys(qdb[addr + 1]);
 				fputc('\n', fpout);
 				addr += 2;
-				break;
-			case 41: fprintf(fpout, "COPYFF\t%d %d\n", qdb[addr + 1], qdb[addr + 2]);
-				addr += 3;
 				break;
 			default: fprintf(fpout, "??%02x??\n", qdb[addr]);
 				addr++;

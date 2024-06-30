@@ -101,98 +101,86 @@ Conditions are:
 Actions are:
 
 ```
-0x01: INVEN
+0x00: INVEN
     Print the player's inventory.
 0x01: DESC
     Stop bytecode processing, describe the player's current location and prompt for a new input.
-0x03: QUIT
+0x02: QUIT
     Ask the player if they want to quit. Execution continues if they say yes. 
-0x04: END
+0x03: END
     Stop bytecode processing, display the game over message, and ask if the player wants another go. If they do, restart the game; otherwise, return to CP/M.
-0x05: DONE
+0x04: DONE
     Stop bytecode processing and prompt for a new input.
-0x06: OK
+0x05: OK
     Display system message 15 ("OK") and behave as DONE.
-0x07: ANYKEY
+0x06: ANYKEY
     Display system message 16 ("Press any key to continue") and wait for a keypress.
-0x08: SAVE
+0x07: SAVE
     Prompt for a filename to save the game state to, and save it.
-0x09: LOAD
+0x08: LOAD
     Prompt for a filename to load the game state from, and load it.
-0x0A: TURNS
+0x09: TURNS
     Display the number of turns the player has taken.
-0x0B: SCORE  FIXME:TO CONFIRM
+0x0A: SCORE
     Display the player's score.
-0x0C: CLS
+0x0B: CLS
     Clear the screen.
-0x0D: DROPALL  FIXME:TO CONFIRM
+0x0C: DROPALL
     Move everything the player is carrying to the current location.
-0x0E: AUTOG
+0x0D: AUTOG
     Try to match the current noun with an object number. If successful, execute GET on that object.
-0x0F: AUTOD
+0x0E: AUTOD
     Try to match the current noun with an object number. If successful, execute DROP on that object.
-0x10: AUTOW  FIXME:TO CONFIRM
+0x0F: AUTOW  
     Try to match the current noun with an object number. If successful, execute WEAR on that object.
-0x11: AUTOR  FIXME:TO CONFIRM
+0x10: AUTOR  
     Try to match the current noun with an object number. If successful, execute REMOVE on that object.
-0x12 ticks: PAUSE ticks  FIXME:TO CONFIRM
+0x11 ticks : PAUSE ticks  
     Delay for roughly ticks/50 seconds.
-0x13: BELL  FIXME:TO CONFIRM
-    Sound the beeper by writing character 7 (BEL) to the screen.
-0x14: ??
-
-0x15: ??
-
-0x16 loc: GOTO loc
+0x12 color : PAPER color  
+    Set background color to color.
+0x13 color : INK color  
+    Set ink color to color.
+0x14 color : BORDER color  
+    Set border color to color.
+0x15 loc: GOTO loc
     Move the player to the specified location.
-0x17 msg: MESSAGE msg
+0x16 msg: MESSAGE msg
     Display the specified message.
-0x18 obj: REMOVE obj  FIXME:TO CONFIRM
+0x17 obj: REMOVE obj  FIXME:TO CONFIRM
     If the specified object is worn, move it to the player's inventory. If this isn't possible, display an error saying why.
-0x19 obj: GET obj
+0x18 obj: GET obj
     If the specified object is in the current location, move it to the player's inventory. If this isn't possible, display an error saying why.
-0x1A obj: DROP obj
+0x19 obj: DROP obj
     If the specified object is in the player's inventory, move it to the current location. If this isn't possible, display an error saying why.
-0x1B obj: WEAR obj
+0x1A obj: WEAR obj
     If the specified object is in the player's inventory, the player wears it. If this isn't possible, display an error saying why.
-0x1C obj: DESTROY obj
+0x1B obj: DESTROY obj
     Destroy the specified object. If it was in the player's inventory, the number of objects carried decreases by 1.
-0x1D obj: CREATE obj
+0x1C obj: CREATE obj
     Move the specified object to the current location. If it was in the player's inventory, the number of objects carried decreases by 1 (fixing a bug in earlier Quill and Quill-like engines.)
-0x1E obj1 obj2: SWAP obj1 obj2
+0x1D obj1 obj2: SWAP obj1 obj2
     Exchange the locations of the two objects.
-0x1F obj loc: PLACE obj loc
+0x1E obj loc: PLACE obj loc
     Move the specified object to the specified location.
-0x20 flag: SET flag
+0x1F flag: SET flag
     Set the specified flag to 255.
-0x30 flag: CLEAR flag
+0x20 flag: CLEAR flag
     Set the specified flag to 0.
-0x31 flag amount: PLUS flag amount
+0x21 flag amount: PLUS flag amount
     Add amount to the specified flag. If the total exceeds 255 it will be capped at 255.
-0x32 flag amount: MINUS flag amount
+0x22 flag amount: MINUS flag amount
     Subtract amount from the specified flag. If the total is less than zero it will be set to zero.
-0x33 flag amount: LET flag amount
-    Set the value of the specified flag to amount.
-0x34: NEWLINE
-    Print a carriage return / line feed.
-0x35 flag: PRINT flag
-    Print the value of a flag as a decimal number.
-0x36 msg: SYSMESS msg
+0x23 flag byte : LET flag number 
+    Set the flag flag con el value the number
+0x24 byte byte : SOUND ticks pitch
+    Made a tone during ticks ticks souning with pitch pitched.
+0x25 : RAMSAVE
+    Save the status of game in memory.
+0x26 : RAMLOAD
+    Recover the status of game from revious RAMSAVE.
+0x27 msg: SYSMESS msg
     Display the specified system message.
-0x37 obj loc: ISAT obj loc
-    Execution continues if the specified object is at the specified location.
-0x38 obj flag: COPYOF obj flag
-    Set flag to the location of the specified object.
-0x39 obj1 obj2: COPYOO obj1 obj2
-    Move object obj2 to the location of obj1.
-0x3A flag obj: COPYFO flag obj
-    Move object obj to the location specified in flag.
-0x3B flag1 flag2: COPYFF flag1 flag2
-    Set flag2 to the value of flag1.
-0x3C: ISDESC
-    Execution continues if the location description has been displayed this turn.
-0x3D nn: EXTERN nn
-    Call external code, passing the supplied byte to it as a parameter. This requires the external code to be added to the interpreter; by default it is a no-op.
 0xFF
     End of bytecode sequence.
 ```

@@ -821,12 +821,12 @@ static const char *condacts[] =
 	"NOTCARR|9|c|o",
 	"CHANCE|10|c|i",
 	"ZERO|11|c|f",
-	"NOTZERO|c|12|f",
+	"NOTZERO|12|c|f",
 	"EQ|13|c|fi",
 	"GT|14|c|fi",
 	"LT|15|c|fi",
 
-		"INVEN|0|a|",
+	"INVEN|0|a|",
 	"DESC|1|a|",
 	"QUIT|2|a|",
 	"END|3|a|",
@@ -836,40 +836,48 @@ static const char *condacts[] =
 	"SAVE|7|a|",
 	"LOAD|8|a|",
 	"TURNS|9|a|",
-		"SCORE|10|a|",
+	"SCORE|10|a|",
 	"CLS|11|a|",
-		"DROPALL|12|a|",
+	"DROPALL|12|a|",
 	"AUTOG|13|a|",
 	"AUTOD|14|a|",
-		"AUTOW|15|a|",
-		"AUTOR|16|a|",
-		"PAUSE|17|a|i",
-		"INK|18|a|i",
-		"PAPER|19|a|i",
-		"BORDER|20|a|i",
+	"AUTOW|15|a|",
+	"AUTOR|16|a|",
+	"PAUSE|17|a|i",
+	"PAPER|18|a|i",
+	"INK|19|a|i",
+	"BORDER|20|a|i",
 	"GOTO|21|a|l",
 	"MESSAGE|22|a|m",
-		"REMOVE|23|a|o",
+	"REMOVE|23|a|o",
 	"GET|24|a|o",
 	"DROP|25|a|o",
-		"WEAR|26|a|o",
+	"WEAR|26|a|o",
 	"DESTROY|27|a|o",
 	"CREATE|28|a|o",
 	"SWAP|29|a|oo",
-		"PLACE|30|a|ol",
-		"SET|31|a|f",
-		"CLEAR|32|a|f",
-		"PLUS|33|a|fi",
-		"MINUS|34|a|fi",
-		"LET|35|a|fi",
-		"NEWLINE|36|a|",
+	"PLACE|30|a|ol",
+	"SET|31|a|f",
+	"CLEAR|32|a|f",
+	"PLUS|33|a|fi",
+	"MINUS|34|a|fi",
+	"LET|35|a|fi",
+	"SOUND|36|a|ii",
 	"RAMSAVE|37|a|",
 	"RAMLOAD|38|a|",
-		"PRINT|39|a|f",
-		"SYSMESS|40|a|s",
-		"SOUND|41|a|ii",
+	"SYSMESS|39|a|s",
 /* CondActs which we recognise but aren't supported by QL engine */
-		"BEEP|X|a|ii",
+	"ISDESC|X|c|"
+	"NEWLINE|X|a|",
+	"PRINT|X|a|f",
+	"BEEP|X|a|ii",
+	"SCREEN|X|a|i",
+	"TEXT|X|a|i",
+	"ADD|X|a|ff",
+	"SUB|X|a|ff",
+	"JSR|X|a|ii",
+	"STAR|X|a|m",
+	"MES|X|a|m",
 	NULL
 };
 
@@ -1240,7 +1248,11 @@ int main(int argc, char **argv)
 
 	pokew(0x34, write_ptr + BASE);
 	//FIXME: Calculate a good memory allocation size
-	pokew(0x38, 32768);
+	if ((write_ptr + BASE)<(1024*30)) {
+	pokew(0x38, 32*1024);
+	} else {
+	pokew(0x38, 40*1024);
+	}
 
 	fpout = fopen(outfile, "wb");
 	if (!fpout)

@@ -257,198 +257,6 @@ zword show_cond(zword addr)
 					qdb[addr + 2]);
 				addr += 3;
 				break;
-			case 16: printf("WORD3\t%d\t", qdb[addr + 1]);
-				if (verbose) show_word(qdb[addr + 1]);
-				putchar('\n');
-				addr += 2;
-				break;
-			case 17: printf("WORD4\t%d\t", qdb[addr + 1]);
-				if (verbose) show_word(qdb[addr + 1]);
-				putchar('\n');
-				addr += 2;
-				break;
-			case 18: printf("INVEN\n");
-				addr++;
-				break;
-			case 19: printf("DESC\n");
-				addr++;
-				break;
-			case 20: printf("QUIT\n");
-				addr++;
-				break;
-			case 21: printf("END\n");
-				addr++;
-				break;
-			case 22: printf("DONE\n");
-				addr++;
-				break;
-			case 23: printf("OK\n");
-				addr++;
-				break;
-			case 24: printf("ANYKEY\n");
-				addr++;
-				break;
-			case 25: printf("SAVE\n");
-				addr++;
-				break;
-			case 26: printf("LOAD\n");
-				addr++;
-				break;
-			case 27: printf("TURNS\n");
-				addr++;
-				break;
-			case 28: printf("SCORE\n");
-				addr++;
-				break;
-			case 29: printf("CLS\n");
-				addr++;
-				break;
-			case 30: printf("DROPALL\n");
-				addr++;
-				break;
-			case 31: printf("AUTOG\n");
-				addr++;
-				break;
-			case 32: printf("AUTOD\n");
-				addr++;
-				break;
-			case 33: printf("AUTOW\n");
-				addr++;
-				break;
-			case 34: printf("AUTOR\n");
-				addr++;
-				break;
-			case 35: printf("PAUSE\t%d\n", qdb[addr + 1]);
-				addr += 2;
-				break;
-			case 36: printf("BELL\n");
-				addr++;
-				break;
-			case 37: printf("GOTO\t%d", qdb[addr + 1]);
-				if (verbose) display_loc(qdb[addr + 1]);
-				putchar('\n');
-				addr += 2;
-				break;
-			case 38: printf("MESSAGE\t%d", qdb[addr + 1]);
-				if (verbose) display_msg(qdb[addr + 1]);
-				putchar('\n');
-				addr += 2;
-				break;
-			case 39: printf("REMOVE\t%d", qdb[addr + 1]);
-				if (verbose) display_obj(qdb[addr + 1]);
-				putchar('\n');
-				addr += 2;
-				break;
-			case 40: printf("GET\t%d", qdb[addr + 1]);
-				if (verbose) display_obj(qdb[addr + 1]);
-				putchar('\n');
-				addr += 2;
-				break;
-			case 41: printf("DROP\t%d", qdb[addr + 1]);
-				if (verbose) display_obj(qdb[addr + 1]);
-				putchar('\n');
-				addr += 2;
-				break;
-			case 42: printf("WEAR\t%d", qdb[addr + 1]);
-				if (verbose) display_obj(qdb[addr + 1]);
-				putchar('\n');
-				addr += 2;
-				break;
-			case 43: printf("DESTROY\t%d", qdb[addr + 1]);
-				if (verbose) display_obj(qdb[addr + 1]);
-				putchar('\n');
-				addr += 2;
-				break;
-			case 44: printf("CREATE\t%d", qdb[addr + 1]);
-				if (verbose) display_obj(qdb[addr + 1]);
-				putchar('\n');
-				addr += 2;
-				break;
-			case 45: printf("SWAP\t%d %d", qdb[addr + 1], qdb[addr + 2]);
-				if (verbose)
-				{
-					display_obj(qdb[addr + 1]);
-					printf("\n\t\t");
-					display_obj(qdb[addr + 2]);
-				}
-				putchar('\n');
-				addr += 3;
-				break;
-			case 46: printf("PLACE\t%d %d", qdb[addr + 1], qdb[addr + 2]);
-				if (verbose)
-				{
-					display_obj(qdb[addr + 1]);
-					printf("\n\t\t");
-					display_loc(qdb[addr + 2]);
-				}
-				putchar('\n');
-				addr += 3;
-				break;
-			case 47: printf("SET\t%d\n", qdb[addr + 1]);
-				addr += 2;
-				break;
-			case 48: printf("CLEAR\t%d\n", qdb[addr + 1]);
-				addr += 2;
-				break;
-			case 49: printf("PLUS\t%d %d\n", qdb[addr + 1], qdb[addr + 2]);
-				addr += 3;
-				break;
-			case 50: printf("MINUS\t%d %d\n", qdb[addr + 1], qdb[addr + 2]);
-				addr += 3;
-				break;
-			case 51: printf("LET\t%d %d\n", qdb[addr + 1], qdb[addr + 2]);
-				addr += 3;
-				break;
-			case 52: printf("NEWLINE\n");
-				addr++;
-				break;
-			case 53: printf("PRINT\t%d\n", qdb[addr + 1]);
-				addr += 2;
-				break;
-			case 54: printf("SYSMESS\t%d", qdb[addr + 1]);
-				if (verbose) display_sysmsg(qdb[addr + 1]);
-				putchar('\n');
-				addr += 2;
-				break;
-			case 55: printf("ISAT\t%d %d", qdb[addr + 1], qdb[addr + 2]);
-				if (verbose)
-				{
-					display_obj(qdb[addr + 1]);
-					printf("\n\t\t");
-					display_loc(qdb[addr + 2]);
-				}
-				putchar('\n');
-				addr += 3;
-				break;
-			case 56: printf("COPYOF\t%d %d", qdb[addr + 1], qdb[addr + 2]);
-				if (verbose) display_obj(qdb[addr + 1]);
-				putchar('\n');
-				addr += 3;
-				break;
-			case 57: printf("COPYOO\t%d %d", qdb[addr + 1], qdb[addr + 2]);
-				if (verbose)
-				{
-					display_obj(qdb[addr + 1]);
-					printf("\n\t\t");
-					display_obj(qdb[addr + 2]);
-				}
-				putchar('\n');
-				addr += 3;
-				break;
-			case 58: printf("COPYFO\t%d %d", qdb[addr + 1], qdb[addr + 2]);
-				if (verbose) display_obj(qdb[addr + 2]);
-				putchar('\n');
-				addr += 3;
-				break;
-			case 59: printf("COPYFF\t%d %d\n", qdb[addr + 1], qdb[addr + 2]);
-				addr += 3;
-				break;
-			case 60: printf("ISDESC\n");
-				addr++;
-				break;
-			case 61: printf("EXTERN\t%d\n", qdb[addr + 1]);
-				addr += 2;
-				break;
 			default: printf("??%02x??\n", qdb[addr]);
 				addr++;
 				break;
@@ -500,14 +308,14 @@ void show_act(zword addr)
 			case 9: printf("TURNS\n"); /* was 27 CONFIRMED 9 */
 				addr++;
 				break;
-			case 10: printf("CHANCE\t%d\n", qdb[addr + 1]);
-				addr += 2;
+			case 10: printf("SCORE\n"); /* was 28 CONFIRMED 10*/
+				addr++;
 				break;
 			case 11: printf("CLS\n"); /* was 29 CONFIRMED 11 */
 				addr++;
 				break;
-			case 12: printf("NOTZERO\t%d\n", qdb[addr + 1]);
-				addr += 2;
+			case 12: printf("DROPALL\n"); /* CONFIRMED 12 */
+				addr++;
 				break;
 			case 13: printf("AUTOG\n"); /* was 31 CONFIRM 13 */
 				addr++;
@@ -515,33 +323,22 @@ void show_act(zword addr)
 			case 14: printf("AUTOD\n"); /* was 32 CONFIRMED 14 */
 				addr++;
 				break;
-			case 15: printf("LT\t%d %d\n", qdb[addr + 1],
-					qdb[addr + 2]);
-				addr += 3;
+			case 15: printf("AUTOW\n"); /* CONFIRMED 15*/
+				addr++;
 				break;
-			case 16: printf("WORD3\t%d\t", qdb[addr + 1]);
-				if (verbose) show_word(qdb[addr + 1]);
-				putchar('\n');
+			case 16: printf("AUTOR\n"); /* CONFIRMED 16*/
+				addr++;
+				break;
+			case 17: printf("PAUSE\t%d\n", qdb[addr + 1]); /* CONFIRMED 17*/
 				addr += 2;
 				break;
-			case 17: printf("WORD4\t%d\t", qdb[addr + 1]);
-				if (verbose) show_word(qdb[addr + 1]);
-				putchar('\n');
+			case 18: printf("PAPER\t%d\n", qdb[addr + 1]); /* CONFIRMED 18*/
 				addr += 2;
 				break;
-			case 18:	printf("AT\t%d", qdb[addr + 1]); /* was 0 */
-				if (verbose) display_loc(qdb[addr + 1]);
-				putchar('\n');
+			case 19: printf("INK\t%d\n", qdb[addr + 1]); /* CONFIRMED 19*/
 				addr += 2;
 				break;
-			case 19:	printf("NOTAT\t%d", qdb[addr + 1]); /* was 01 */
-				if (verbose) display_loc(qdb[addr + 1]);
-				putchar('\n');
-				addr += 2;
-				break;
-			case 20:	printf("ATGT\t%d", qdb[addr + 1]); /* was 2 */
-				if (verbose) display_loc(qdb[addr + 1]);
-				putchar('\n');
+			case 20: printf("BORDER\t%d\n", qdb[addr + 1]); /* CONFIRMED 20*/
 				addr += 2;
 				break;
 			case 21: printf("GOTO\t%d", qdb[addr + 1]); /* was 37 CONFIRMADO 21 */
@@ -554,7 +351,7 @@ void show_act(zword addr)
 				putchar('\n');
 				addr += 2;
 				break;
-			case 39: printf("REMOVE\t%d", qdb[addr + 1]);
+			case 23:	printf("REMOVE\t%d", qdb[addr + 1]); /* was 5  CONFIRMED 23 */
 				if (verbose) display_obj(qdb[addr + 1]);
 				putchar('\n');
 				addr += 2;
@@ -569,7 +366,7 @@ void show_act(zword addr)
 				putchar('\n');
 				addr += 2;
 				break;
-			case 26:	printf("CARRIED\t%d", qdb[addr + 1]); /* was 8 */
+			case 26:	printf("WEAR\t%d", qdb[addr + 1]); /* was 8 CONFIRMED 26*/
 				if (verbose) display_obj(qdb[addr + 1]);
 				putchar('\n');
 				addr += 2;
@@ -594,150 +391,42 @@ void show_act(zword addr)
 				putchar('\n');
 				addr += 3;
 				break;
-			case 30: printf("DROPALL\n");
-				addr++;
+			case 30: printf("PLACE\t%d %d", qdb[addr + 1], qdb[addr + 2]); /* CONFIRMED 30 */
+				if (verbose) 
+				{
+					display_obj(qdb[addr + 1]);
+					printf("\n\t\t");
+					display_loc(qdb[addr + 2]);
+				}
+				putchar('\n');
+				addr += 3;
 				break;
 			case 31: printf("SET\t%d\n", qdb[addr + 1]); /* was 47 */
 				addr += 2;
 				break;
-			case 32: printf("GT\t%d %d\n", qdb[addr + 1], /* was 14 */
-					qdb[addr + 2]);
-				addr += 3;
-				break;
-			case 33: printf("AUTOW\n");
-				addr++;
-				break;
-			case 34: printf("AUTOR\n");
-				addr++;
-				break;
-			case 35: printf("PAUSE\t%d\n", qdb[addr + 1]);
+			case 32: printf("CLEAR\t%d\n", qdb[addr + 1]); /* was 14  CONFIRMED 32 */
 				addr += 2;
 				break;
-			case 36: printf("BELL\n");
-				addr++;
+			case 33: printf("PLUS\t%d %d\n", qdb[addr + 1], qdb[addr + 2]); /* CONFIRMED 33 */
+				addr += 3;
+				break;
+			case 34: printf("MINUS\t%d %d\n", qdb[addr + 1], qdb[addr + 2]); /* CONFIRMED 34 */
+				addr += 3;
+				break;
+			case 35: printf("LET\t%d %d\n", qdb[addr + 1], qdb[addr + 2]); /* CONFIRMED 35 */
+				addr += 3;
+				break;
+			case 36: printf("SOUND\t%d %d\n", qdb[addr + 1], qdb[addr + 2]); /*  */
+				addr += 3;
 				break;
 			case 37: printf("RAMSAVE\n"); /* NEW CONFIRMED 37 */
 				addr++;
 				break;
-			case 38:	printf("PRESENT\t%d", qdb[addr + 1]); /* was 4  */
-				if (verbose) display_obj(qdb[addr + 1]);
-				putchar('\n');
-				addr += 2;
-				break;
-			case 23:	printf("ABSENT\t%d", qdb[addr + 1]); /* was 5  */
-				if (verbose) display_obj(qdb[addr + 1]);
-				putchar('\n');
-				addr += 2;
-				break;
-			case 40:	printf("WORN\t%d", qdb[addr + 1]); /* was 6 */
-				if (verbose) display_obj(qdb[addr + 1]);
-				putchar('\n');
-				addr += 2;
-				break;
-			case 41:	printf("NOTWORN\t%d", qdb[addr + 1]); /* was 7 */
-				if (verbose) display_obj(qdb[addr + 1]);
-				putchar('\n');
-				addr += 2;
-				break;
-			case 42: printf("WEAR\t%d", qdb[addr + 1]);
-				if (verbose) display_obj(qdb[addr + 1]);
-				putchar('\n');
-				addr += 2;
-				break;
-			case 43:	printf("NOTCARR\t%d", qdb[addr + 1]); /* was 9 */
-				if (verbose) display_obj(qdb[addr + 1]);
-				putchar('\n');
-				addr += 2;
-				break;
-			case 44: printf("SCORE\n"); /* was 28 */
+			case 38: printf("RAMLOAD\n"); /* NEW CONFIRMED 38 */
 				addr++;
 				break;
-			case 45: printf("ZERO\t%d\n", qdb[addr + 1]); /* was 11 */
+			case 39: printf("SYSMESS\t%d\n", qdb[addr + 1]); /*  */
 				addr += 2;
-				break;
-			case 46: printf("PLACE\t%d %d", qdb[addr + 1], qdb[addr + 2]);
-				if (verbose)
-				{
-					display_obj(qdb[addr + 1]);
-					printf("\n\t\t");
-					display_loc(qdb[addr + 2]);
-				}
-				putchar('\n');
-				addr += 3;
-				break;
-			case 47: printf("EQ\t%d %d\n", qdb[addr + 1], /* was 13 */
-					qdb[addr + 2]);
-				addr += 3;
-				break;
-			case 48: printf("CLEAR\t%d\n", qdb[addr + 1]);
-				addr += 2;
-				break;
-			case 49: printf("PLUS\t%d %d\n", qdb[addr + 1], qdb[addr + 2]);
-				addr += 3;
-				break;
-			case 50: printf("MINUS\t%d %d\n", qdb[addr + 1], qdb[addr + 2]);
-				addr += 3;
-				break;
-			case 51: printf("LET\t%d %d\n", qdb[addr + 1], qdb[addr + 2]);
-				addr += 3;
-				break;
-			case 52: printf("NEWLINE\n");
-				addr++;
-				break;
-			case 53: printf("PRINT\t%d\n", qdb[addr + 1]);
-				addr += 2;
-				break;
-			case 54: printf("SYSMESS\t%d", qdb[addr + 1]);
-				if (verbose) display_sysmsg(qdb[addr + 1]);
-				putchar('\n');
-				addr += 2;
-				break;
-			case 55: printf("ISAT\t%d %d", qdb[addr + 1], qdb[addr + 2]);
-				if (verbose)
-				{
-					display_obj(qdb[addr + 1]);
-					printf("\n\t\t");
-					display_loc(qdb[addr + 2]);
-				}
-				putchar('\n');
-				addr += 3;
-				break;
-			case 56: printf("COPYOF\t%d %d", qdb[addr + 1], qdb[addr + 2]);
-				if (verbose) display_obj(qdb[addr + 1]);
-				putchar('\n');
-				addr += 3;
-				break;
-			case 57: printf("COPYOO\t%d %d", qdb[addr + 1], qdb[addr + 2]);
-				if (verbose)
-				{
-					display_obj(qdb[addr + 1]);
-					printf("\n\t\t");
-					display_obj(qdb[addr + 2]);
-				}
-				putchar('\n');
-				addr += 3;
-				break;
-			case 58: printf("COPYFO\t%d %d", qdb[addr + 1], qdb[addr + 2]);
-				if (verbose) display_obj(qdb[addr + 2]);
-				putchar('\n');
-				addr += 3;
-				break;
-			case 59: printf("COPYFF\t%d %d\n", qdb[addr + 1], qdb[addr + 2]);
-				addr += 3;
-				break;
-			case 60: printf("ISDESC\n");
-				addr++;
-				break;
-			case 61: printf("EXTERN\t%d\n", qdb[addr + 1]);
-				addr += 2;
-				break;
-			case 62:	printf("ATLT\t%d", qdb[addr + 1]); /* was 3 */
-				if (verbose) display_loc(qdb[addr + 1]);
-				putchar('\n');
-				addr += 2;
-				break;
-			case 63: printf("RAMLOAD\n");
-				addr++;
 				break;
 			default: printf("??%02x??\n", qdb[addr]);
 				addr++;
