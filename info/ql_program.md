@@ -29,6 +29,8 @@ using lresp to load the executable game work, but game is unable to leave, going
 
 Ctr, Shift and number or symbol can generate internacional leters as per next table:
 
+![Table of characters](QL_Extra_Keys.png)
+
 Alt + 0-7 change color of ink.
 Alt + 8 inverse video, 
 Alt + 9 Go back to normal colors.
@@ -78,3 +80,11 @@ is Incompatible with Minerva Rom (not load database, other pending test)
 ## Not tested yet
 
 what happend with colors in mode 4.
+
+## Porting from other platforms.
+
+On most platform flags 30,31 & 32 store score, and 2-byte number of turns, in the QL this is managed by flags 60,61 & 62, so contacts need to be corrected.
+
+Sound and beep contacts are not translated so need to be corrected.
+
+there is a tipical "_ _ isdesc done" line in status table to avoid event just after description of new locations, as isdesc is not available on QL, this shall be comment or replaced.

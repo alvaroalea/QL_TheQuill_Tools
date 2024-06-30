@@ -45,7 +45,7 @@ DW is a 32 bits word (4 bytes)
 The format of the individual tables is then:
 ## Process / Response
 
-The Process table is executed before user input, the Response after. Both table has four bytes per entry:
+The Process table is executed before user input, the Response after. Both table has 6 bytes per entry:
 
 ```
 	DB	word_id	;Verb to match, 0xFF is a wildcard
@@ -189,10 +189,11 @@ Actions are:
 
 The object, location, message and system message tables are all stored in the same way. The corresponding word in the header points to a table of words giving the addresses of the object/location/message strings.
 
-The strings are stored with each byte complemented (XORed with 0xFF) as a protection against casual snooping. End of string is indicated by 0xF5, which complemented is 0x0D (carriage return). The only other control code I have seen used is 0x0A (newline).
+The strings are stored with each byte complemented (XORed with 0xFF) as a protection against casual snooping. End of string is indicated by 0xFF, Other control codes include 0x0A as new line, 0x10 to 0x17 to indicate ink colors, 0x18 to inverse the paper and ink and 0x19 to return the original colors.
 
-Regarding character set: since CP/M has no standard character set beyond ASCII, I would expect QDB files only to contain ASCII and not to make assumptions about characters 0x80 and up.
-Connections
+Regarding character set: use the original QL charset with non-english caracters.
+
+## Connections
 
 As with location texts, the word in the header points to a table of words with one entry per location. Each word points to a list of connections:
 
@@ -210,6 +211,7 @@ The vocabulary table contains five bytes per word. The first four are the word (
 The end of the table is marked by two entries:
 - an entry containing "*   ", 0xFF.
 - an entry containing five zero bytes.
+
 ## Object initial locations
 
 One byte per object giving its start location. Values of 0xFC or greater mean:
@@ -227,6 +229,8 @@ The table must be followed by a 0xFF byte.
 One byte per object giving the word_id for that object — used by the AUTOG / AUTOD / AUTOW / AUTOR operations. For example, in the Very Big Cave Adventure, object 4 ("A shiny brass lamp") has word 20 (LAMP) as its name. Objects with no name use a word_id of 0xFF.
 
 ## Format of saved game state
+
+THIS INFORMATION IS FOR CP/M, FOR QL IS NOT TESTED YET.
 
 The game state is saved as a 512-byte file with the extension .QGP. The first 256 bytes hold flags:
 

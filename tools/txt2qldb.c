@@ -548,8 +548,17 @@ static void parse_tx(long tx_pos, int tx_line,
  * Not supported by QDB, so we skip them */
 //FIXME: QL suppport it. 
 //FIXME: extra chars here for SINclair QL
-						if (data[1] == '+' || data[1] == '-')
+//FIXME: Ascii 0x10 a 0x17 son colores negro,azul... a blanco 
+//FIXME: Ascii 0x18 es invertido, 0x19 es normal.
+
+						if (data[1] == '+')
 						{
+						append_byte(~0x18);
+							++data;
+						}
+						else if (data[1]=='-') 
+						{
+						append_byte(~0x19);
 							++data;
 						}
 						else if (data[1] == '0' && data[2] == 'x')
