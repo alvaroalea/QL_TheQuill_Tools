@@ -24,17 +24,17 @@ The main diferences between CP/M and QL are:
 * the CONDitions use the same binary code tham CP/M, but the ACTions use a diferente code.
 
 ## Roadmap
--[ ] [DONE 75%] Create a QLdb2txt program that dump the database in .QSE format (editable text)
--[ ] [DONE 25%] Document aditional features of The Quill for QL
--[ ] [DONE 50%] Create a TXT2QLDB program that create a database from a .QSE file
+- [ ] [DONE 75%] Create a QLdb2txt program that dump the database in .QSE format (editable text)
+- [ ] [DONE 25%] Document aditional features of The Quill for QL
+- [ ] [DONE 50%] Create a TXT2QLDB program that create a database from a .QSE file
 
-*
--[ ] Create some tools that configure files for use in ql (file header)
--[ ] Convert several only-text adventures to QL and test the reability of previous tools.
--[ ] Identify all "only text", "text and full screen images" and "text and images" adventures ever created for QL.
--[ ] Convert all "only text" adventures to QL
--[ ] Translate documents to Spanish
--[ ] Create tools to incorporate graphics to QL Adventures
--[ ] Port all others adventures to QL
--[ ] Create CAAD for QL
--[ ] Create some post on blog about all of this.
+
+- [ ] Create some tools that configure files for use in ql (file header)
+- [ ] Convert several only-text adventures to QL and test the reability of previous tools.
+- [ ] Identify all "only text", "text and full screen images" and "text and images" adventures ever created for QL.
+- [ ] Convert all "only text" adventures to QL
+- [ ] Translate documents to Spanish
+- [ ] Create tools to incorporate graphics to QL Adventures
+- [ ] Port all others adventures to QL
+- [ ] Create CAAD for QL
+- [ ] Create some post on blog about all of this.
