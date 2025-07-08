@@ -340,10 +340,11 @@
     previous line using Control <BACK ARROW>. Now reinsert the Shift
     <ENTER>.
 
-    The colour of the ink can be changed by entering Control <0, 1 to 7>,
-    the ink numbers, and the paper colour by selecting the ink as normal
-    then Control <8> will select Inverse (i.e. Reversing Ink and Paper).
-    Control <9> resets the paper and ink to the Permanent Colours.
+    The colour of the Ink can be changed by entering <Alt> 0 to 7,
+    (The ink colours), and the paper colour by entering <Alt><8> which
+    selects Inverse (i.e. Reversing Ink and Paper). <Alt><9> resets
+    the paper and ink to the Permanent Colours. <Shift Enter>
+    behaves in the same way as "\" in Basic PRINT statement.
     Experiment with the insertion of <Shift ENTER> and try inserting
     multiple Shift <ENTER>'s to create blank lines in the text.
 
@@ -1254,10 +1255,10 @@
                          PRESENT   9
                   Acts   MESSAGE   3
                          PLUS    60   50
-                         BEEP    20   140
-                         BEEP    20   160
-                         BEEP    20   180
-                         BEEP    90   200
+                         SOUND   20   140
+                         SOUND   20   160
+                         SOUND   20   180
+                         SOUND   90   200
                          SCORE
                          TURNS
                          END
@@ -1296,10 +1297,10 @@
                          ZERO    12
                   Acts   MESSAGE 2
                          PAUSE   100
-                         BEEP    20  200
-                         BEEP    20  180
-                         BEEP    20  160
-                         BEEP    90  140
+                         SOUND   20  200
+                         SOUND   20  180
+                         SOUND   20  160
+                         SOUND   90  140
                          SCORE
                          TURNS
                          END
@@ -1611,7 +1612,7 @@
        j) Write out all the Status table entries and plan the order of the
          entries.  You might need to add further entries to the vocabulary
          which will be used as comments in the Status table
-
+6
        k) Insert the entries into the database and save the database
           regularly (you might get a power cut)
 
@@ -2185,14 +2186,14 @@
 
        This table contains the text of any messages which are
        needed for the adventure. The messages are numbered from 0
-       upwards and each one uses 3 bytes plus the length of the
+       upwards and each one uses 5 bytes plus the length of the
        text.
 
     C   The Location Text table
 
        This table, which has an entry for each location,
        contains the text which is printed when a location is
-       described.  Each entry uses 3 bytes plus the length of the
+       described.  Each entry uses 5 bytes plus the length of the
        text. The entries are numbered from 0 upwards and location
        0 is the location at which the adventure starts.  Whenever
        a new location is inserted a null entry for that location
@@ -2213,7 +2214,7 @@
        which means that SOUTH or RETURN or their synonyms cause
        movement to location 6, EAST or it's synonyms to location 7
        and NORTH or it's synonyms to location 5.  Each entry uses
-       3 bytes plus 2 bytes for each movement pair.
+       5 bytes plus 2 bytes for each movement pair.
 
        Note 1.  The movement pairs contain the word value not the
        actual word and if a word value is deleted from the
@@ -2231,7 +2232,7 @@
 
        This table, which has an entry for each object, contains
        the text which is printed when an object is described.
-       Each entry uses 3 bytes plus the length of the text.  An
+       Each entry uses 5 bytes plus the length of the text.  An
        object  is anything in the adventure which  may  be
        manipulated and objects are numbered from 0 upwards.
        Object 0 is assumed by the Interpreter to be a source of
@@ -2276,7 +2277,7 @@
                 GET (100) LAMP (26)
                 GET (100) LAMP (26)
 
-       Each entry in the table has an overhead of 6 bytes and each
+       Each entry in the table has an overhead of 8 bytes and each
        condition and action uses 1, 2 or 3 bytes depending on the
        number of parameters.
 
@@ -2304,7 +2305,7 @@
     I   The Interpreter Messages
 
        This table contains the messages used by the Interpreter.
-       Each entry uses 3 bytes plus the length of the text.  The
+       Each entry uses 5 bytes plus the length of the text.  The
        description of the Interpreter shows when these messages
        are being used.
 
@@ -2966,7 +2967,8 @@
     Flags 5-8 decreased each turn
     Flag  9   decreased each turn when it's dark
     Flag  10  decreased each turn when it's dark and Object 0 is absent
-    Flags 11-60 ordinary flags
-    Flag 61   holds the score
-    Flag 62   holds turns count LSB
-    Flag 63   holds turns count MSB
+    Flags 11-59 ordinary flags
+    Flag 60   holds the score
+    Flag 61   holds turns count LSB
+    Flag 62   holds turns count MSB
+    Flag 63   free to use
