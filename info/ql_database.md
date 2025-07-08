@@ -13,12 +13,12 @@ DW is a 32 bits word (4 bytes)
 
 ```
 0x00	DB	0x00		;Unknown -- zero in both CAVE1.QDB and CAVE2.QDB
-0x01	DB	0x01		;Database version, 1
-0x02	DB	0x01		;Ink Color, 1
-0x03	DB	0x01		;Paper Color , 1
-0x04	DB	0x01		;Border Width, 1
-0x05	DB	0x01		;Border Color, 1
-0x06	DB	0x01		;Conveyable objects, 1
+0x01	DB	0x01		;Paper Color , (default 1)
+0x02	DB	0x01		;Ink Color, (default 7)
+0x03	DB	0x01		;Paper Color , (default 1) (repeated)
+0x04	DB	0x01		;Border Width, (default 2)
+0x05	DB	0x01		;Border Color, (default 7)
+0x06	DB	0x01		;Conveyable objects, (default 4)
 0x07	DB	objcount	;Number of objects
 0x08	DB	loccount	;Number of locations
 0x09	DB	msgcount	;Number of messages
