@@ -688,7 +688,7 @@ int main(int argc, char **argv)
 	fprintf(fpout, "Q\t\t;Indicates Quill rather than PAW data\n");
 	fprintf(fpout, "_\t\t;Null word character is an underline\n");
 	fprintf(fpout,"; Ink Color: %d\n",  qdb[2]);
-	fprintf(fpout,"; Paper Color: %d\n", qdb[3]);
+	fprintf(fpout,"; Paper Color: %d\n", qdb[1]);
 	fprintf(fpout,"; Border Witdh: %d\n", qdb[4]);
 	fprintf(fpout,"; Border Color: %d\n", qdb[5]);
 	fprintf(fpout,"; Conveyable Objects :%d\n", qdb[6]);
